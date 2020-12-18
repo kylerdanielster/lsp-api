@@ -1,8 +1,14 @@
 CREATE DATABASE lone_star_pairings;
 
+-- psql -U {username}
+-- \c {db_name} -- connect to db
+
+-- uuid extention setup https://www.postgresqltutorial.com/postgresql-uuid/
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; 
+
 -- Users
 
-CREATE TABLE users(
+CREATE TABLE IF NOT EXISTS user(
   user_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_name VARCHAR(255) NOT NULL,
   user_email VARCHAR(255) NOT NULL,
@@ -10,7 +16,7 @@ CREATE TABLE users(
   last_update TIMESTAMP
 );
 
-CREATE TABLE user_profile(
+CREATE TABLE IF NOT EXISTS user_profile(
   profile_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id uuid NOT NULL,
   first_name VARCHAR(255),
@@ -23,7 +29,7 @@ CREATE TABLE user_profile(
 
 -- Tournaments
 
-CREATE TABLE tournaments(
+CREATE TABLE IF NOT EXISTS tournament(
   tournament_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_by_user_id uuid NOT NULL,
   address_id uuid,
@@ -31,14 +37,18 @@ CREATE TABLE tournaments(
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   has_started BOOLEAN,
-  game_system INT NOT NULL,
+  game_system_cd VARCHAR(3) NOT NULL
   number_of_rounds INT NOT NULL,
   current_round INT,
   game_system_id INT NOT NULL,
-  last_update TIMESTAMP
+  last_update TIMESTAMP,
+  CONSTRAINT fk_game_system
+    FOREIGN KEY (game_system_cd)
+    REFERENCES game_system(game_system_cd)
+
 );
 
-CREATE TABLE address(
+CREATE TABLE IF NOT EXISTS address(
   address_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   address_line_1 VARCHAR(100),
   address_line_2 VARCHAR(100),
@@ -49,14 +59,14 @@ CREATE TABLE address(
   last_update TIMESTAMP
 );
 
-CREATE TABLE game_system(
+CREATE TABLE IF NOT EXISTS game_system(
   id SERIAL PRIMARY KEY,
-  game_system VARCHAR(100),
-  game_system_id INT NOT NULL
+  game_system_name VARCHAR(100),
+  game_system_cd VARCHAR(3) UNIQUE NOT NULL
 );
 
 -- Primary key is tournament_id and user_id
-CREATE TABLE tournament_participants(
+CREATE TABLE IF NOT EXISTS tournament_participant(
   tournament_id uuid NOT NULL,
   user_id uuid NOT NULL,
   army_list TEXT,
@@ -68,7 +78,7 @@ CREATE TABLE tournament_participants(
 );
 
 -- Primary key is tournament_id and user_id
-CREATE TABLE tournament_admins(
+CREATE TABLE IF NOT EXISTS tournament_admin(
   tournament_id uuid NOT NULL,
   user_id uuid NOT NULL,
   PRIMARY KEY(tournament_id, user_id),
@@ -79,7 +89,7 @@ CREATE TABLE tournament_admins(
 
 -- Rounds
 
-CREATE TABLE tournament_round(
+CREATE TABLE IF NOT EXISTS tournament_round(
   tournament_round_id uudi PRIMARY KEY DEFAULT uuid_generate_v4(),
   tournament_id uuid,
   has_started BOOLEAN,
@@ -89,8 +99,7 @@ CREATE TABLE tournament_round(
     REFERENCES tournaments(tournament_id)
 );
 
--- FK tournament_round_id 
-CREATE TABLE tournament_round_pairings(
+CREATE TABLE IF NOT EXISTS tournament_round_pairing(
   tournament_round_pairings_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   tournament_round_id uuid NOT NULL,
   table_number INT,

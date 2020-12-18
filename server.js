@@ -27,7 +27,7 @@ app.use(cors());
 // register and login routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
-app.use('/api/profile', require('./routes/profile'));
+app.use('/api/profiles', require('./routes/profiles'));
 
 
 app.listen(config.server.port, () => logging.info(NAMESPACE, 

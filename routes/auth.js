@@ -1,18 +1,19 @@
 const router = require('express').Router();
-const pool = require('../db');
 const bcrypt = require('bcrypt');
 const auth = require('../middleware/auth');
-const jwtGenerator = require('../utils/jwtGenerator');
 const { check, validationResult } = require('express-validator');
 
+const jwtGenerator = require('../utils/jwtGenerator');
+const userRepository = require('../data/userRepository');
+
 // @route GET api/auth
-// @desc Test route
+// @desc Is user logged in
 // @access Private
 router.get('/', auth, async (req, res) => {
   try {
     const { email } = req.body;
 
-    const user = await pool.query('SELECT user_email FROM users WHERE user_email = $1', [email]);
+    const user = await userRepository.getUserByEmail(email);
 
     res.json(user.rows[0].user_email);
   } catch(err) {
@@ -38,7 +39,7 @@ async (req, res) => {
       
     const { email, password } = req.body;
 
-    const user = await pool.query('SELECT * FROM users WHERE user_email = $1', [email]);
+    const user = await userRepository.getUserByEmail(email);
 
     if(user.rows.length === 0) {
       return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
