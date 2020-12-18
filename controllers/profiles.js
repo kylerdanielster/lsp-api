@@ -66,7 +66,7 @@ router.post(
 );
 
 // TODO this should be PRIVATE!?
-// @route    POST api/profile/user/:user_id
+// @route    GET api/profile/user/:user_id
 // @desc     Get profile by user id
 // @access   Public 
 router.get('/user/:user_id', async (req, res) => {
@@ -80,14 +80,6 @@ router.get('/user/:user_id', async (req, res) => {
 
    return res.json(results);
   } catch (err) {
-
-    // *** NOTE *** I dont like this but I dont see a better way to 
-    // know that the query failed to find because of invalid user_id (uuid)
-
-    if(err.message.includes('uuid')) {
-      return res.status(400).json({ msg: 'Profile not found' });
-    }
-
     res.status(500).send('Server error');
   }
 });

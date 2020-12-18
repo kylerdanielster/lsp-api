@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 const jwtGenerator = require('../utils/jwtGenerator');
 const userRepository = require('../data/userRepository');
 
-// @route GET api/user
+// @route POST api/user
 // @desc Register user
 // @access Public
 router.post('/', [
