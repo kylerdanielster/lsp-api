@@ -15,7 +15,7 @@ router.get('/', auth, async (req, res) => {
 
     const user = await userRepository.getUserByEmail(email);
 
-    res.json(user.rows[0].user_email);
+    res.json(user.user_email);
   } catch(err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -41,17 +41,17 @@ async (req, res) => {
 
     const user = await userRepository.getUserByEmail(email);
 
-    if(user.rows.length === 0) {
+    if(user === null) {
       return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
     }
     
-    const validPassword = await bcrypt.compare(password, user.rows[0].user_password);
+    const validPassword = await bcrypt.compare(password, user.user_password);
 
     if(!validPassword) {
       return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
     }
 
-    const token = jwtGenerator(user.rows[0].user_id);
+    const token = jwtGenerator(user.user_id);
 
     return res.json({ token });
 

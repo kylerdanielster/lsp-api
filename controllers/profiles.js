@@ -9,15 +9,13 @@ const profileRepository = require('../data/profileRepository');
 // @access   Private
 router.get('/me', auth, async (req, res) => {
   try {
-    const profile = await profileRepository.getProfileByUserID(req.user.id);
+    const results = await profileRepository.getProfileByUserID(req.user.id);
 
-    const userProfile = profile.rows[0];
-
-    if (!userProfile) {
+    if (results === null) {
       return res.status(400).json({ msg: 'There is no profile for this user' });
     }
 
-    res.json(userProfile);
+    res.json(results);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -49,17 +47,16 @@ router.post(
       };
 
       let results = await profileRepository.updateProfile(profile);
+      console.log('Tried update: ', results);
 
       // check to see if any rows were updated
       // if none were updated, do an insert
-      if(results.rowCount === 0) {
+      if(results === null) {
         console.log('Did an insert');
         results = await profileRepository.saveProfile(profile);
       }
-
-      const userProfile = results.rows[0];
       
-      return res.json(userProfile);
+      return res.json(results);
 
     } catch (err) {
       console.error(err.message);
@@ -75,13 +72,13 @@ router.post(
 router.get('/user/:user_id', async (req, res) => {
   try {
 
-    let results = await profileRepository.getProfileByUserID(req.params.user_id);
+    const results = await profileRepository.getProfileByUserID(req.params.user_id);
 
-     if (!results.rows.length === 0) {
+     if (results === null) {
       return res.status(400).json({ msg: 'Profile not found' });
     }
 
-   return res.json(results.rows[0]);
+   return res.json(results);
   } catch (err) {
 
     // *** NOTE *** I dont like this but I dont see a better way to 

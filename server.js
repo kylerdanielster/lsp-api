@@ -25,9 +25,9 @@ app.use(express.json());
 app.use(cors());
 
 // register and login routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/profiles', require('./routes/profiles'));
+app.use('/api/auth', require('./controllers/auth'));
+app.use('/api/users', require('./controllers/users'));
+app.use('/api/profiles', require('./controllers/profiles'));
 
 
 app.listen(config.server.port, () => logging.info(NAMESPACE, 

@@ -1,8 +1,9 @@
 const router = require('express').Router();
-const pool = require('../data/db');
 const bcrypt = require('bcrypt');
-const jwtGenerator = require('../utils/jwtGenerator');
 const { check, validationResult } = require('express-validator');
+
+const jwtGenerator = require('../utils/jwtGenerator');
+const userRepository = require('../data/userRepository');
 
 // @route GET api/user
 // @desc Register user
@@ -22,9 +23,10 @@ async (req, res) => {
     
     const { email, password, name } = req.body;
 
-    const user = await pool.query('SELECT * FROM users WHERE user_email = $1', [email]);
+    const user = userRepository.getUserByEmail(email);
 
-    if(user.rows.length !== 0) {
+    if(user !== null) {
+      console.log('User is already registered');
       return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
     }
 
@@ -32,12 +34,9 @@ async (req, res) => {
 
     const bcryptPassword = await bcrypt.hash(password, salt);
 
-    let newUser = await pool.query(
-        'INSERT INTO users (user_email, user_password, user_name) VALUES ($1, $2, $3) RETURNING *',
-      [email, bcryptPassword, name]
-    );
+    const newUser = userRepository.saveUser(email, bcryptPassword, name);
 
-    const token = jwtGenerator(newUser.rows[0].user_id);
+    const token = jwtGenerator(newUser.user_id);
 
     return res.json({ token });
 

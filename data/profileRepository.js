@@ -11,17 +11,23 @@ const updateQuery = `UPDATE user_profile SET
                     RETURNING *`;
 
 const getProfileByUserID = async (user_id) => {
-  return await pool.query('SELECT * FROM user_profile WHERE user_id = $1', [user_id]);
+  const results = await pool.query('SELECT * FROM user_profile WHERE user_id = $1', [user_id]);
+
+  return results.rowCount === 0 ? null : results.rows[0];
 }
 
 const saveProfile = async (profile) => {
-  return await pool.query(insertQuery, 
+  const results = await pool.query(insertQuery, 
     [profile.user_id, profile.first_name, profile.last_name]);
+
+  return results.rowCount === 0 ? null : results.rows[0];
 }
 
 const updateProfile = async (profile) => {
-  return await pool.query(updateQuery, 
+  const results = await pool.query(updateQuery, 
     [profile.first_name, profile.last_name, profile.user_id]);
+
+  return results.rowCount === 0 ? null : results.rows[0];
 }
 
 module.exports = {
