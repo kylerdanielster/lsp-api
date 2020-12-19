@@ -1,12 +1,13 @@
 const pool = require('./db');
 
-const insertQuery = `INSERT INTO user_profile (user_id, first_name, last_name) 
-                    VALUES ($1, $2, $3) 
+const insertQuery = `INSERT INTO user_profile (user_id, first_name, last_name, last_update) 
+                    VALUES ($1, $2, $3, NOW()) 
                     RETURNING *`;
 
 const updateQuery = `UPDATE user_profile SET
                     first_name = $1, 
-                    last_name = $2
+                    last_name = $2,
+                    last_update = NOW()
                     WHERE user_id = $3
                     RETURNING *`;
 

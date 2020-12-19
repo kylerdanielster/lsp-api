@@ -8,7 +8,8 @@ const getUserByEmail = async (email) => {
 
 const saveUser = async(email, bcryptPassword, name) => {
   const results = await pool.query(
-    'INSERT INTO users (user_email, user_password, user_name) VALUES ($1, $2, $3) RETURNING *',
+    `INSERT INTO users (user_email, user_password, user_name, last_update) 
+      VALUES ($1, $2, $3, NOW()) RETURNING *`,
       [email, bcryptPassword, name]
     );
   

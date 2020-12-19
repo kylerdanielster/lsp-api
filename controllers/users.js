@@ -23,10 +23,10 @@ async (req, res) => {
     
     const { email, password, name } = req.body;
 
-    const user = userRepository.getUserByEmail(email);
+    const user = await userRepository.getUserByEmail(email);
 
     if(user !== null) {
-      console.log('User is already registered');
+      console.log('User is already registered', user);
       return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
     }
 
@@ -34,7 +34,7 @@ async (req, res) => {
 
     const bcryptPassword = await bcrypt.hash(password, salt);
 
-    const newUser = userRepository.saveUser(email, bcryptPassword, name);
+    const newUser = await userRepository.saveUser(email, bcryptPassword, name);
 
     const token = jwtGenerator(newUser.user_id);
 
