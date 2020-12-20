@@ -1,32 +1,21 @@
-const router = require('express').Router();
 const bcrypt = require('bcrypt');
-const { check, validationResult } = require('express-validator');
 
 const jwtGenerator = require('../utils/jwtGenerator');
 const userRepository = require('../data/userRepository');
 
-// @route POST api/user
-// @desc Register user
-// @access Public
-router.post('/', [
-  check('email', 'Please include a valid email').isEmail().normalizeEmail(),
-  check('password', 'Password is required').exists(),
-  check('name', 'Name is required').exists().trim().escape()
-], 
-async (req, res) => {
-  const errors = validationResult(req);
-  if(!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() })
-  }
+const logging = require('../middleware/logging');
+const NAMESPACE = 'User';
 
+const registerUser = async (req, res) => {
   try {
+    logging.info(NAMESPACE, 'Register a user');
     
     const { email, password, name } = req.body;
 
     const user = await userRepository.getUserByEmail(email);
 
     if(user !== null) {
-      console.log('User is already registered', user);
+      logging.info(NAMESPACE, 'User is already registered');
       return res.status(401).json({ errors: [{ msg: 'Invalid Credentials' }] });
     }
 
@@ -40,10 +29,11 @@ async (req, res) => {
 
     return res.json({ token });
 
-  } catch (error) {
-    console.error(error.message);
+  } catch (err) {
+    logging.error(NAMESPACE, err.message);
     res.status(500, 'Server error');
   }
-});
+}
 
-module.exports = router;
+
+module.exports = { registerUser };

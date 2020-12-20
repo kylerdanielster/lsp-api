@@ -25,10 +25,13 @@ app.use(express.json());
 app.use(cors());
 
 // register and login routes
-app.use('/api/auth', require('./controllers/auth'));
-app.use('/api/users', require('./controllers/users'));
-app.use('/api/profiles', require('./controllers/profiles'));
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/profiles', require('./routes/profileRoutes'));
+app.use('/api/tournamets', require('./routes/tournamentRoutes'));
 
 
 app.listen(config.server.port, () => logging.info(NAMESPACE, 
   `Server is running ${config.server.hostname}:${config.server.port}`));
+
+module.exports = app; // for testing

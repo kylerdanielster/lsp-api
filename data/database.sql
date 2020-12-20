@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS game_system(
   game_system_cd VARCHAR(3) UNIQUE NOT NULL
 );
 
+INSERT INTO game_system (game_system_name, game_system_cd) VALUES ('Warhammer 40000', '40K');
+
 CREATE TABLE IF NOT EXISTS tournament(
   tournament_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   created_by_user_id uuid NOT NULL,
@@ -55,7 +57,6 @@ CREATE TABLE IF NOT EXISTS tournament(
   game_system_cd VARCHAR(3) NOT NULL,
   number_of_rounds INT NOT NULL,
   current_round INT,
-  game_system_id INT NOT NULL,
   last_update TIMESTAMP,
   CONSTRAINT fk_game_system
     FOREIGN KEY (game_system_cd)
