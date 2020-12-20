@@ -14,7 +14,7 @@ describe('Tournament Routes', () => {
     token = jwtGenerator('test_user');
     done();
   });
-  describe('POST /tournament', () => {
+  describe('POST /tournaments', () => {
     it('should return not authorized', done => {
       chai
       .request(app)
@@ -26,11 +26,11 @@ describe('Tournament Routes', () => {
       });
     });
   });
-  describe('POST /tournament/:tournament_id', () => {
+  describe('PUT /tournaments/:tournament_id', () => {
     it('should return not authorized', done => {
       chai
       .request(app)
-      .post('/api/tournaments/:tournament_id')
+      .put('/api/tournaments/:tournament_id')
       .end((err, res) => {
         res.should.have.status(401);
         expect(res.body.msg).to.deep.equal('Authorization denied');
@@ -38,7 +38,7 @@ describe('Tournament Routes', () => {
       });
     });
   }); 
-  describe('POST /tournament', () => {
+  describe('POST /tournaments', () => {
     it('should return validation errors', done => {
       chai
       .request(app)
@@ -46,20 +46,20 @@ describe('Tournament Routes', () => {
       .set('x-auth-token', token)
       .end((err, res) => {
         res.should.have.status(400);
-        expect(res.body.errors.length).to.equal(7);
+        expect(res.body.errors.length).to.equal(9);
         done();
       });
     });
   });
-   describe('POST /tournament/:tournament_id', () => {
+   describe('PUT /tournaments/:tournament_id', () => {
     it('should return validation errors', done => {
       chai
       .request(app)
-      .post('/api/tournaments/:tournament_id')
+      .put('/api/tournaments/:tournament_id')
       .set('x-auth-token', token)
       .end((err, res) => {
         res.should.have.status(400);
-        expect(res.body.errors.length).to.equal(7);
+        expect(res.body.errors.length).to.equal(5);
         done();
         });
       });

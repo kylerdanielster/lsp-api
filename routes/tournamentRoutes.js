@@ -18,15 +18,18 @@ router.get('/:tournament_id', tournamentController.getTournamentById);
 
 // @route POST api/tournament
 // @desc Create a tournament
-// @access Public
+// @access Private
 router.post('/', [
   check('tournament_name', 'Name is required').not().isEmpty().trim().escape(),
   check('start_date', 'Start date is required').not().isEmpty().trim().escape(),
+  check('end_date').not().isEmpty().trim().escape(),
   check('game_system_cd', 'Game system is required').not().isEmpty().trim().escape(),
   check('number_of_rounds', 'Number of rounds required').isInt(),
   check('address_line_1', 'Address is required').not().isEmpty().trim().escape(),
   check('address_line_2').optional().trim().escape(),
+  check('address_line_3').optional().trim().escape(),
   check('city', 'City is required').not().isEmpty().trim().escape(),
+  check('state', 'State is required').not().isEmpty().trim().escape(),
   check('zipcode', 'Zipcode is required').not().isEmpty().trim().escape(),
 ], 
   auth,
@@ -36,16 +39,13 @@ router.post('/', [
 
 // @route POST api/tournament/:tournament_id
 // @desc Update a tournament
-// @access Public
-router.post('/:tournament_id', [
+// @access Private
+router.put('/:tournament_id', [
   check('tournament_name', 'Name is required').not().isEmpty().trim().escape(),
   check('start_date', 'Start date is required').not().isEmpty().trim().escape(),
+  check('end_date').not().isEmpty().trim().escape(),
   check('game_system_cd', 'Game system is required').not().isEmpty().trim().escape(),
   check('number_of_rounds', 'Number of rounds required').isInt(),
-  check('address_line_1', 'Address is required').not().isEmpty().trim().escape(),
-  check('address_line_2').optional().trim().escape(),
-  check('city', 'City is required').not().isEmpty().trim().escape(),
-  check('zipcode', 'Zipcode is required').not().isEmpty().trim().escape(),
 ], 
   auth,
   validateRequest,

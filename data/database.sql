@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS tournament(
   game_system_cd VARCHAR(3) NOT NULL,
   number_of_rounds INT NOT NULL,
   current_round INT,
-  last_update TIMESTAMP,
+  last_update TIMESTAMP NOT NULL,
   CONSTRAINT fk_game_system
     FOREIGN KEY (game_system_cd)
     REFERENCES game_system(game_system_cd)
@@ -66,13 +66,14 @@ CREATE TABLE IF NOT EXISTS tournament(
 
 CREATE TABLE IF NOT EXISTS address(
   address_id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-  address_line_1 VARCHAR(100),
+  address_line_1 VARCHAR(100) NOT NULL,
   address_line_2 VARCHAR(100),
-  city VARCHAR(100),
-  state VARCHAR(100),
-  zipcode VARCHAR (20),
-  country VARCHAR(100),
-  last_update TIMESTAMP
+  address_line_3 VARCHAR(100),
+  city VARCHAR(100) NOT NULL,
+  state VARCHAR(100) NOT NULL,
+  zipcode VARCHAR (20) NOT NULL ,
+  country VARCHAR(100) NOT NULL,
+  last_update TIMESTAMP NOT NULL
 );
 
 -- Primary key is tournament_id and user_id

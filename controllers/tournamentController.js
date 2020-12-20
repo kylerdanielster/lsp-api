@@ -1,4 +1,5 @@
 const tournamentRepository = require('../data/tournamentRepository');
+const addressRepository = require('../data/addressRepository');
 
 const logging = require('../middleware/logging');
 const NAMESPACE = 'Tournament';
@@ -35,13 +36,13 @@ const getAllTournaments = async (req, res) => {
   }
 }
 
+// This is breaking SRP but this is what we
+// are doing for now 
 const createTournament = async (req, res) => {
   try {
     logging.info(NAMESPACE, 'Create a tournament');
 
-    const tournament = {
-      created_by_user_id, 
-      address_id, 
+    let tournament = {
       tournament_name, 
       start_date, 
       end_date, 
@@ -50,8 +51,23 @@ const createTournament = async (req, res) => {
       number_of_rounds, 
       current_round
     } = req.body;
+
+    const address = {
+      address_line_1, 
+      address_line_2, 
+      address_line_3, 
+      city, 
+      state, 
+      zipcode, 
+      country
+    } = req.body;
+
+    const addressResponse = await addressRepository.create(address);
+
+    tournament.address_id = addressResponse.address_id;
+    tournament.created_by_user_id = req.user.id;
       
-    results = await tournamentRepository.create(tournament);
+    const results = await tournamentRepository.create(tournament);
     
     return res.json(results);
 
@@ -65,9 +81,7 @@ const updateTournament = async (req, res) => {
   try {
     logging.info(NAMESPACE, 'Update a tournament');
 
-    const tournament = {
-      created_by_user_id, 
-      address_id, 
+    let tournament = {
       tournament_name, 
       start_date, 
       end_date, 
@@ -77,7 +91,9 @@ const updateTournament = async (req, res) => {
       current_round
     } = req.body;
       
-    results = await tournamentRepository.update(req.params.tournament_id, tournament);
+    tournament.tournament_id = req.params.tournament_id;
+
+    results = await tournamentRepository.update(tournament);
     
     return res.json(results);
 

@@ -16,17 +16,15 @@ const insertSql = `INSERT INTO tournament (
   RETURNING *`;
 
 const updateSql = `UPDATE tournament SET 
-    created_by_user_id = $1, 
-    address_id = $2, 
-    name = $3, 
-    start_date = $4, 
-    end_date = $5, 
-    has_started = $6, 
-    game_system_cd = $7, 
-    number_of_rounds = $8, 
-    current_round = $9, 
+    name = $1, 
+    start_date = $2, 
+    end_date = $3, 
+    has_started = $4, 
+    game_system_cd = $5, 
+    number_of_rounds = $6, 
+    current_round = $7, 
     last_update = NOW()
-  WHERE tournament_id = $10
+  WHERE tournament_id = $8
   RETURNING *`;
 
 const create = async(tournament) => {
@@ -46,11 +44,9 @@ const create = async(tournament) => {
   return results.rowCount === 0 ? null : results.rows[0];
 }
 
-const update = async(tournament_id, tournament) => {
+const update = async(tournament) => {
   const results = await pool.query(updateSql,
     [
-      tournament.created_by_user_id, 
-      tournament.address_id, 
       tournament.name, 
       tournament.start_date, 
       tournament.end_date, 
@@ -58,7 +54,7 @@ const update = async(tournament_id, tournament) => {
       tournament.game_system_cd, 
       tournament.number_of_rounds, 
       tournament.current_round,
-      tournament_id
+      tournament.tournament_id
     ]);
 
   return results.rowCount === 0 ? null : results.rows[0];

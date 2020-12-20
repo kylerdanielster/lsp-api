@@ -28,7 +28,7 @@ const debug = (namespace, message, object) => {
   if (object) {
       console.debug(chalk.magenta(`[${getTimeStamp()}] [DEBUG] [${namespace}] ${message}`, object));
   } else {
-      console.debug(chalks.magenta(`[${getTimeStamp()}] [DEBUG] [${namespace}] ${message}`));
+      console.debug(chalk.magenta(`[${getTimeStamp()}] [DEBUG] [${namespace}] ${message}`));
   }
 };
 

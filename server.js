@@ -29,7 +29,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/profiles', require('./routes/profileRoutes'));
 app.use('/api/tournaments', require('./routes/tournamentRoutes'));
-
+app.use('/api/address', require('./routes/addressRoutes'));
 
 app.listen(config.server.port, () => logging.info(NAMESPACE, 
   `Server is running ${config.server.hostname}:${config.server.port}`));
