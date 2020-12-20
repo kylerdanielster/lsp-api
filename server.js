@@ -28,7 +28,7 @@ app.use(cors());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/profiles', require('./routes/profileRoutes'));
-app.use('/api/tournamets', require('./routes/tournamentRoutes'));
+app.use('/api/tournaments', require('./routes/tournamentRoutes'));
 
 
 app.listen(config.server.port, () => logging.info(NAMESPACE, 

@@ -35,5 +35,19 @@ const registerUser = async (req, res) => {
   }
 }
 
+const deleteUser = async (req, res) => {
+  try {
+    logging.info(NAMESPACE, 'Deleting a user');
+    
+    const { user_id } = req.body;
 
-module.exports = { registerUser };
+    const user = await userRepository.deleteUser(user_id);
+
+    return res.status(200);
+  } catch(err) {
+    logging.error(NAMESPACE, err.message);
+    return res.status(500).send('Server Error');
+  }
+}
+
+module.exports = { registerUser, deleteUser};

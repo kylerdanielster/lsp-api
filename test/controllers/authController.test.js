@@ -1,8 +1,8 @@
 const sinon = require('sinon');
 const chai = require('chai');
 const expect = chai.expect;
-const userRepository = require('../data/userRepository');
-const authController = require('../controllers/authController');
+const userRepository = require('../../data/userRepository');
+const authController = require('../../controllers/authController');
 
 describe('Auth controller', () => {
   let req = {

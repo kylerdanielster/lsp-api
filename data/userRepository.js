@@ -16,8 +16,15 @@ const saveUser = async(email, bcryptPassword, name) => {
   return results.rowCount === 0 ? null : results.rows[0];
 }
 
+const deleteUser = async(user_id) => {
+  const results = await pool.query('DELETE FROM users WHERE user_id = $1', 
+    [user_id]);
+
+  return results;
+}
 
 module.exports = {
   getUserByEmail,
-  saveUser
+  saveUser,
+  deleteUser
 }
